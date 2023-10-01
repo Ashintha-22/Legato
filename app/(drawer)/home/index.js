@@ -32,7 +32,10 @@ const Home = () => {
           />
         </TouchableOpacity>
       </ImageBackground>
-      <Pressable onPress={() => router.push("/home/output")}>
+      <Pressable
+        onPress={() => router.push("/home/output")}
+        style={{ backgroundColor: "lightblue", padding: 10, borderRadius: 20 }}
+      >
         <Text style={styles.textButton}>Convert</Text>
       </Pressable>
     </View>
