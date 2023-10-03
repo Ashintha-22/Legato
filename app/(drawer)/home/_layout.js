@@ -4,6 +4,7 @@ const HomeLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
+      <Stack.Screen name="upload" />
       <Stack.Screen
         name="output"
         options={{
