@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import styles from "../shared/styles";
 import { Link, useRouter } from "expo-router";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Login = () => {
   const router = useRouter();
@@ -42,16 +43,30 @@ const Login = () => {
               style={styles.textInput}
               secureTextEntry={true}
             />
-            <Pressable
+            <TouchableOpacity
               onPress={() => {
-                router.replace("/(drawer)/home");
+                //router.replace("/(drawer)/home");
               }}
+              style={styles.button}
+              activeOpacity={0.8}
             >
-              <Image
-                source={require("../assets/Google_SignIn.png")}
-                style={styles.googleSignIn}
-              />
-            </Pressable>
+              <Text style={{ fontWeight: "bold", fontSize: 18, color: "#fff" }}>
+                Login
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={{ marginVertical: 10 }}>OR</Text>
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/Register");
+              }}
+              style={[styles.button, { backgroundColor: "#fff", marginTop: 0 }]}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.textButton, { color: "black" }]}>
+                Register
+              </Text>
+            </TouchableOpacity>
           </View>
         </ImageBackground>
       </ScrollView>

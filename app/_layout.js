@@ -15,7 +15,14 @@ const StackLayout = () => {
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="Register" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Register"
+        options={{
+          headerShown: false,
+          presentation: "transparentModal",
+          animation: "slide_from_bottom",
+        }}
+      />
     </Stack>
   );
 };

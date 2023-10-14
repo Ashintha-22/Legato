@@ -45,6 +45,20 @@ const styles = StyleSheet.create({
     zIndex: 1,
     elevation: 5,
   },
+  button: {
+    width: 150,
+    height: 50,
+    backgroundColor: "#222",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 50 },
+    elevation: 3,
+    shadowRadius: 1,
+    shadowOpacity: 0.8,
+  },
 });
 
 export default styles;

@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import styles from "../../../shared/styles";
 import { Link, useRouter } from "expo-router";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
+import { storage } from "../../../firebaseConfig";
+import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -27,6 +30,9 @@ const Home = () => {
   const router = useRouter();
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [downloadImage, setDownloadImage] = useState("");
 
   useEffect(() => {
     loadImage();
@@ -58,6 +64,10 @@ const Home = () => {
 
     if (!result.canceled) {
       saveImage(result.assets[0].uri);
+      const uploadURL = await uploadImage(result.assets[0].uri);
+      setDownloadImage(uploadURL);
+    } else {
+      setImage(null);
     }
   };
 
@@ -68,6 +78,34 @@ const Home = () => {
     const dest = imgDir + fileName;
     await FileSystem.copyAsync({ from: uri, to: dest });
     setImage(dest);
+  };
+
+  const uploadImage = async (uri: string) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    try {
+      //timestamp with prefix Image for unique file name
+      const storageRef = ref(storage, `Images/image-${Date.now()}`);
+      const result = await uploadBytes(storageRef, blob as Blob);
+
+      // We're done with the blob, close and release it
+      (blob as any).close();
+      return await getDownloadURL(storageRef);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
