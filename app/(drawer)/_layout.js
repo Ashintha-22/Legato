@@ -1,7 +1,38 @@
 import { Drawer } from "expo-router/drawer";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { TouchableOpacity, Alert } from "react-native";
+import { auth } from "../../firebaseConfig";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
+import { useRouter, Redirect, router } from "expo-router";
 
-const DrawerLayout = () => {
+const DrawerLayout = (navigation) => {
+  const router = useRouter();
+
+  const logout = async () => {
+    await signOut(auth)
+      .then(() => {
+        Alert.alert("Signed out successfully!");
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("user", user);
+      if (user == null) {
+        console.log(user);
+        //want the code here
+        router.replace(".../index");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <Drawer
       screenOptions={{
@@ -15,6 +46,16 @@ const DrawerLayout = () => {
         drawerActiveBackgroundColor: "#333",
         drawerInactiveTintColor: "#555",
         drawerLabelStyle: { fontWeight: "bold", fontSize: 16, marginLeft: 5 },
+        headerRight: () => (
+          <TouchableOpacity activeOpacity={0.8} onPress={logout}>
+            <Ionicons
+              name="log-out-outline"
+              size={25}
+              style={{ marginRight: 20 }}
+              color="#fff"
+            />
+          </TouchableOpacity>
+        ),
       }}
     >
       <Drawer.Screen

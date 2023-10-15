@@ -8,16 +8,44 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../shared/styles";
 import { Link, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { User } from "firebase/auth";
 
 const Login = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      console.log("user", user);
+
+      if (user) {
+        router.replace("/home");
+      }
+    });
+  }, []);
+
+  const signIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        // ...
+        router.push("/home");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,16 +65,14 @@ const Login = () => {
             />
             <TextInput
               placeholder="Password"
-              valur={password}
+              value={password}
               onChangeText={(text) => setPassword(text)}
               placeholderTextColor="#676767"
               style={styles.textInput}
               secureTextEntry={true}
             />
             <TouchableOpacity
-              onPress={() => {
-                //router.replace("/(drawer)/home");
-              }}
+              onPress={signIn}
               style={styles.button}
               activeOpacity={0.8}
             >
