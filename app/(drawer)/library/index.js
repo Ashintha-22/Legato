@@ -6,12 +6,17 @@ import {
   Image,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import styles from "../../../shared/styles";
 import Card from "../../../shared/Card";
 import { Link, useRouter } from "expo-router";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
 
 const recommendation = [
   { title: "Fur Elise", author: "Beethoven", id: 1 },
@@ -29,11 +34,26 @@ const MusicLibrary = () => {
   const isLoading = false;
   const error = false;
 
-  const handleCardPress = (item) => {
-    // Implement the desired behavior when a card is pressed
-    console.log(`Card for ${item} was pressed.`);
-    // You can perform any actions you want here
-  };
+  const [libraryData, setLibraryData] = useState([]);
+  const [downloadURL, setdownloadURL] = useState("");
+
+  useEffect(() => {
+    const getlibrary = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "library"));
+        const data = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setLibraryData(data);
+      } catch (e) {
+        console.log("Error getting documents: ", e);
+      }
+    };
+    getlibrary();
+  }, []);
+
+  const handleCardPress = (uri) => {};
 
   return (
     <View
@@ -51,13 +71,14 @@ const MusicLibrary = () => {
           <Text>Something went Wrong! ;/</Text>
         ) : (
           <FlatList
-            data={recommendation}
+            data={libraryData}
             numColumns={2}
             renderItem={({ item }) => (
               <Card
                 title={item.title}
                 author={item.author}
-                handleCardPress={handleCardPress}
+                uri={item.uri}
+                handleCardPress={() => {}}
               />
             )}
             keyExtractor={(item) => item.id}

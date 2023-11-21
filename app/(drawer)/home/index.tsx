@@ -16,6 +16,8 @@ import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { db } from "../../../firebaseConfig";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -33,11 +35,22 @@ const Home = () => {
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [downloadImage, setDownloadImage] = useState("");
+  const [downloadURI, setDownloadURI] = useState("");
 
   useEffect(() => {
     loadImage();
   }, []);
 
+  const addData = async () => {
+    const timestamp = new Date().getTime(); // Get current timestamp
+    const fileName = `${timestamp}.jpg`; // Use timestamp as part of the filename
+    // Add a new document in collection "cities"
+    await setDoc(doc(db, "library", fileName), {
+      title: fileName,
+      uri: downloadURI,
+    });
+    console.log(downloadURI, "document added successfully");
+  };
   const loadImage = async () => {
     await ensureDirExists();
     const files = await FileSystem.readDirectoryAsync(imgDir);
@@ -102,7 +115,14 @@ const Home = () => {
 
       // We're done with the blob, close and release it
       (blob as any).close();
-      return await getDownloadURL(storageRef);
+
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+      setDownloadURI(downloadURL);
+
+      addData();
+
+      return downloadURL;
     } catch (error) {
       console.log(error);
     }

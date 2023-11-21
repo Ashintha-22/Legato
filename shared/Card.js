@@ -2,18 +2,15 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React from "react";
 import styles from "../shared/styles";
 
-const Card = ({ title, author, handleCardPress }) => {
+const Card = ({ title, author, uri, handleCardPress }) => {
   return (
     <View>
       <TouchableOpacity
         style={cardStyle.container(title)}
-        onPress={() => handleCardPress(title)}
+        onPress={() => handleCardPress(uri)}
       >
         <View style={cardStyle.logoContainer(title)}>
-          <Image
-            style={cardStyle.logoImage}
-            source={require("../assets/sampleScore.jpg")}
-          />
+          <Image style={cardStyle.logoImage} source={{ uri }} />
         </View>
         <View style={cardStyle.textContainer}>
           <Text style={cardStyle.jobName(title)} numberOfLines={1}>
