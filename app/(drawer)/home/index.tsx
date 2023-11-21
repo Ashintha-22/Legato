@@ -115,16 +115,25 @@ const Home = () => {
   };
 
   const generatePdf = async () => {
-    const html = `
-      <html>
-        <body>
-          <h1>Output:</h1>
-          <p>${outputText}</p>
-        </body>
-      </html>
-    `;
+    const imageUri = imgDir + image;
 
     try {
+      // Read the image file as a base64-encoded string
+      const imageBase64 = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const html = `
+        <html>
+          <body>
+            <h1>Input Image:</h1>
+            <img src="data:image/jpeg;base64,${imageBase64}" style="width: 300px; height: auto; border-radius: 20px;" />
+            <h1>Output:</h1>
+            <p>${outputText}</p>
+          </body>
+        </html>
+      `;
+
       const file = await printToFileAsync({
         html: html,
         base64: false,
