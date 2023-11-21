@@ -18,17 +18,6 @@ import { db } from "../../../firebaseConfig";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 
-const recommendation = [
-  { title: "Fur Elise", author: "Beethoven", id: 1 },
-  { title: "Canon in D", author: "Someone", id: 2 },
-  { title: "Requiem", author: "Mozart", id: 3 },
-  { title: "Moonlight Sonata", author: "Beethoven", id: 4 },
-  { title: "Turkish March", author: "Someone", id: 5 },
-  { title: "Symphony No. 5", author: "Someone", id: 6 },
-  { title: "Ave Verum Corpus", author: "Mozart", id: 7 },
-  { title: "item8", author: "Someone", id: 8 },
-];
-
 const MusicLibrary = () => {
   const router = useRouter();
   const isLoading = false;

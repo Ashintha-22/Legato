@@ -41,10 +41,16 @@ const Home = () => {
   const [uploading, setUploading] = useState(false);
   const [downloadImage, setDownloadImage] = useState<string>("");
   const [outputText, setOutputText] = useState<string>("");
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
 
-  useEffect(() => {
-    loadImage();
-  }, []);
+  // useEffect(() => {
+  //   loadImage();
+  // }, []);
+
+  console.log(image);
 
   const addData = async () => {
     const timestamp = new Date().getTime(); // Get current timestamp
@@ -81,8 +87,17 @@ const Home = () => {
       result = await ImagePicker.launchCameraAsync(options);
     }
 
+    loadImage();
+
     if (!result.cancelled) {
       saveImage(result.uri);
+
+      // Get the dimensions of the selected image
+      Image.getSize(result.uri, (width, height) => {
+        console.log(width, height);
+        setImageDimensions({ width, height });
+      });
+
       setDownloadImage("");
     } else {
       setImage(null);
@@ -239,7 +254,7 @@ const Home = () => {
               source={{ uri: imgDir + image }}
               style={{
                 width: 300,
-                height: 534,
+                height: (300 * imageDimensions.height) / imageDimensions.width,
                 borderRadius: 20,
               }}
               resizeMode="contain"
@@ -274,12 +289,12 @@ const Home = () => {
   );
 };
 
-const App = () => {
-  return (
-    <View style={{ flex: 1 }}>
-      <Home />
-    </View>
-  );
-};
+// const App = () => {
+//   return (
+//     <View style={{ flex: 1 }}>
+//       <Home />
+//     </View>
+//   );
+// };
 
 export default Home;
