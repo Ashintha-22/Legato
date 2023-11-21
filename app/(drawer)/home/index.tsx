@@ -86,10 +86,8 @@ const Home = () => {
       await ImagePicker.requestCameraPermissionsAsync();
       result = await ImagePicker.launchCameraAsync(options);
     }
-
     loadImage();
-
-    if (!result.cancelled) {
+    if (!result.canceled) {
       saveImage(result.uri);
 
       // Get the dimensions of the selected image
@@ -244,12 +242,20 @@ const Home = () => {
           </TouchableOpacity>
         </ImageBackground>
 
-        <View style={{ marginBottom: 20 }}>
-          <Button title="Take Photo" onPress={() => selectImage(false)} />
+        <View style={{ marginBottom: 20, marginTop: -20 }}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: "#22A6DF", width: 250 }]}
+            disabled={uploading}
+            onPress={() => selectImage(false)}
+          >
+            <Text style={[styles.textButton, { color: "#eee" }]}>
+              Take Photo
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {image && (
-          <View style={{ marginBottom: 20 }}>
+          <View style={{ marginBottom: 20, marginTop: 20 }}>
             <Image
               source={{ uri: imgDir + image }}
               style={{
@@ -271,13 +277,16 @@ const Home = () => {
             /> */}
 
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: "#ff9500" }]}
+              style={[
+                styles.button,
+                { backgroundColor: "#22A6DF", width: 250 },
+              ]}
               disabled={uploading}
               onPress={imageToBackend}
             >
               {uploading && <Text style={styles.textButton}>Uploading...</Text>}
               {!uploading && (
-                <Text style={[styles.textButton, { color: "#fff" }]}>
+                <Text style={[styles.textButton, { color: "#eee" }]}>
                   Convert
                 </Text>
               )}
