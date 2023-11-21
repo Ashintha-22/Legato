@@ -10,6 +10,8 @@ import React from "react";
 import styles from "../../../shared/styles";
 import { Link, useRouter } from "expo-router";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { auth } from "../../../firebaseConfig";
+import { User } from "firebase/auth";
 
 const Profile = () => {
   return (

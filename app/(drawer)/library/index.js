@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import styles from "../../../shared/styles";
@@ -23,6 +24,7 @@ const MusicLibrary = () => {
   const isLoading = false;
   const error = false;
 
+  const [loading, setLoading] = useState(false);
   const [libraryData, setLibraryData] = useState([]);
   const [downloadURL, setdownloadURL] = useState("");
 
@@ -42,7 +44,9 @@ const MusicLibrary = () => {
     getlibrary();
   }, []);
 
-  const handleCardPress = (uri) => {};
+  const handleCardPress = async (uri) => {
+    Linking.openURL(uri);
+  };
 
   return (
     <View
@@ -67,7 +71,7 @@ const MusicLibrary = () => {
                 title={item.title}
                 author={item.author}
                 uri={item.uri}
-                handleCardPress={() => {}}
+                handleCardPress={() => handleCardPress(item.uri)}
               />
             )}
             keyExtractor={(item) => item.id}

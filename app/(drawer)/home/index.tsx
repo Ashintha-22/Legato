@@ -254,7 +254,7 @@ const Home = () => {
               source={{ uri: imgDir + image }}
               style={{
                 width: 300,
-                height: (300 * imageDimensions.height) / imageDimensions.width,
+                height: 400,
                 borderRadius: 20,
               }}
               resizeMode="contain"
@@ -264,11 +264,24 @@ const Home = () => {
 
         {image && (
           <View style={{ marginBottom: 20 }}>
-            <Button
-              title={uploading ? "Uploading..." : "Upload Image"}
+            {/* <Button
+              title={uploading ? "Uploading..." : "Convert"}
               onPress={imageToBackend}
               disabled={uploading}
-            />
+            /> */}
+
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "#ff9500" }]}
+              disabled={uploading}
+              onPress={imageToBackend}
+            >
+              {uploading && <Text style={styles.textButton}>Uploading...</Text>}
+              {!uploading && (
+                <Text style={[styles.textButton, { color: "#fff" }]}>
+                  Convert
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
         )}
 
