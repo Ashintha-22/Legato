@@ -12,6 +12,8 @@ import {
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { printToFileAsync } from "expo-print";
+import { shareAsync } from "expo-sharing";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -91,7 +93,7 @@ const Home = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.33:5000/process",
+        "http://192.168.8.102:5000/process",
         formData,
         {
           headers: {
@@ -109,6 +111,29 @@ const Home = () => {
       Alert.alert("Error", "An error occurred while uploading the image");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const generatePdf = async () => {
+    const html = `
+      <html>
+        <body>
+          <h1>Output:</h1>
+          <p>${outputText}</p>
+        </body>
+      </html>
+    `;
+
+    try {
+      const file = await printToFileAsync({
+        html: html,
+        base64: false,
+      });
+
+      await shareAsync(file.uri);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "An error occurred while generating the PDF");
     }
   };
 
@@ -165,17 +190,16 @@ const Home = () => {
           </View>
         )}
 
-        {downloadImage !== "" && (
-          <View>
-            <Text>Downloaded Image URL:</Text>
-            <Text>{downloadImage}</Text>
-          </View>
-        )}
-
         {outputText !== "" && (
           <View style={{ backgroundColor: "#fff", padding: 10, marginTop: 20 }}>
             <Text style={{ fontSize: 16, fontWeight: "bold" }}>Output:</Text>
             <Text>{outputText}</Text>
+          </View>
+        )}
+
+        {outputText !== "" && (
+          <View style={{ marginBottom: 20 }}>
+            <Button title="Generate PDF" onPress={generatePdf} />
           </View>
         )}
       </ScrollView>
