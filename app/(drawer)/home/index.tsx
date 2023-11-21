@@ -127,7 +127,7 @@ const Home = () => {
         <html>
           <body>
             <h1>Input Image:</h1>
-            <img src="data:image/jpeg;base64,${imageBase64}" style="width: 300px; height: auto; border-radius: 20px;" />
+            <img src="data:image/jpeg;base64,${imageBase64}" style="width: 800px; height: auto; border-radius: 20px;" />
             <h1>Output:</h1>
             <p>${outputText}</p>
           </body>
