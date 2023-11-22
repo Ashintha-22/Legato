@@ -23,6 +23,7 @@ import { storage } from "../../../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { db } from "../../../firebaseConfig";
 import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -244,11 +245,17 @@ const Home = () => {
 
         <View style={{ marginBottom: 20, marginTop: -20 }}>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#22A6DF", width: 250 }]}
+            style={[
+              styles.button,
+              { flexDirection: "row", backgroundColor: "#ddd", width: 220 },
+            ]}
             disabled={uploading}
             onPress={() => selectImage(false)}
           >
-            <Text style={[styles.textButton, { color: "#eee" }]}>
+            <Ionicons name="camera-outline" size={25} color="#222" />
+            <Text
+              style={[styles.textButton, { marginLeft: 10, color: "#222" }]}
+            >
               Take Photo
             </Text>
           </TouchableOpacity>
@@ -303,7 +310,11 @@ const Home = () => {
 
         {outputText !== "" && (
           <View style={{ marginBottom: 20 }}>
-            <Button title="Generate PDF" onPress={generatePdf} />
+            <Button
+              title="Generate PDF"
+              onPress={generatePdf}
+              color={"#22A6DF"}
+            />
           </View>
         )}
       </ScrollView>
